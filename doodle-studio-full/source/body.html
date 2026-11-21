@@ -1,0 +1,239 @@
+<header>
+  <div class="logo"><div class="mark">🎨</div><b>Doodle Studio</b><small>v2</small></div>
+  <div class="tabs" role="tablist">
+    <button data-tab="design" class="on">🧩 Design</button>
+    <button data-tab="paint">🖌️ Paint</button>
+    <button data-tab="code">📝 Code</button>
+    <button data-tab="learn">🎬 Learn</button>
+  </div>
+  <button id="playBtn" title="Play (Ctrl+Enter)">▶ Play</button>
+  <div class="spacer"></div>
+  <div class="hgroup">
+    <div class="menuwrap">
+      <button id="examplesBtn">✨ Examples ▾</button>
+      <div class="menu" id="examplesMenu"></div>
+    </div>
+    <div class="menuwrap">
+      <button id="fileBtn">📁 File ▾</button>
+      <div class="menu" id="fileMenu">
+        <button class="mi" data-file="new"><span class="em">📄</span><span><b>New project</b><span class="d">Start with an empty stage</span></span></button>
+        <button class="mi" data-file="open"><span class="em">📂</span><span><b>Open…</b><span class="d">Load a .doodle project file</span></span></button>
+        <button class="mi" data-file="save"><span class="em">💾</span><span><b>Save to file</b><span class="d">Download your project as .doodle</span></span></button>
+        <button class="mi" data-file="shot"><span class="em">📸</span><span><b>Screenshot</b><span class="d">Save the stage as a picture</span></span></button>
+      </div>
+    </div>
+    <button id="exportBtn" class="primary">🚀 Export game</button>
+    <button id="themeBtn" class="icon ghost" title="Light / dark theme">🌙</button>
+  </div>
+  <input type="file" id="fileIn" accept=".doodle,.json" hidden>
+  <input type="file" id="imgIn" accept="image/*" hidden>
+</header>
+
+<!-- ============ DESIGN + CODE ============ -->
+<section id="workspace" class="view on">
+  <div class="panel" id="designPanel">
+    <div class="sect">
+      <h3>Add an object <span><button class="icon ghost" id="undoBtn" title="Undo (Ctrl+Z)">↶</button><button class="icon ghost" id="redoBtn" title="Redo (Ctrl+Y)">↷</button></span></h3>
+      <div class="addgrid">
+        <button data-add="rect" title="Box">⬛<small>box</small></button>
+        <button data-add="circle" title="Circle">⚫<small>circle</small></button>
+        <button data-add="star" title="Star">⭐<small>star</small></button>
+        <button data-add="triangle" title="Triangle">🔺<small>triangle</small></button>
+        <button data-add="text" title="Text">🔤<small>text</small></button>
+        <button data-add="sprite" title="Sprite (a picture you painted)">🖼️<small>sprite</small></button>
+      </div>
+    </div>
+    <div class="sect"><h3>Selected object</h3><div id="props"></div></div>
+    <div class="sect"><h3>Objects <span class="tag" id="objCount">0</span></h3><ul id="layers"></ul></div>
+    <div class="sect">
+      <h3>Stage</h3>
+      <div class="row3">
+        <label>width <input type="number" id="st-w" min="100" max="2000"></label>
+        <label>height <input type="number" id="st-h" min="100" max="2000"></label>
+        <label>color <input type="color" id="st-bg"></label>
+      </div>
+      <label>backdrop picture <select id="st-backdrop"></select></label>
+      <label class="check"><input type="checkbox" id="snap" checked> Snap to grid</label>
+    </div>
+  </div>
+
+  <div class="panel" id="codePanel" hidden>
+    <div class="codebar">
+      <div class="menuwrap">
+        <button id="snipBtn">➕ Insert ▾</button>
+        <div class="menu left" id="snipMenu" style="min-width:300px"></div>
+      </div>
+      <button id="refBtn">📖 Guide</button>
+      <div class="chips" id="chips"></div>
+    </div>
+    <div class="codegrid" id="codegrid">
+      <div class="editor">
+        <div class="gutter" id="gutter"></div>
+        <div class="edwrap">
+          <pre id="hl" aria-hidden="true"></pre>
+          <textarea id="code" spellcheck="false" wrap="off" autocapitalize="off" autocomplete="off"></textarea>
+          <div id="ac"></div>
+        </div>
+      </div>
+      <div class="refpane" id="refpane" hidden>
+        <div class="rs"><input id="refSearch" placeholder="🔍 Search Doodle words…"></div>
+        <div id="refList"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stagecol">
+    <div class="stagebar">
+      <div class="status" id="status"></div>
+      <button class="icon" id="fsBtn" title="Full screen">⛶</button>
+    </div>
+    <div class="stagebox" id="stagebox"><canvas id="stage" tabindex="0" width="600" height="400"></canvas></div>
+    <div class="conwrap">
+      <div class="conhead"><span>Console</span><button id="clearCon">Clear</button></div>
+      <div id="console"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PAINT ============ -->
+<section id="paint" class="view">
+  <div class="panel">
+    <div class="sect">
+      <h3>Tools</h3>
+      <div class="tools" id="tools">
+        <button data-tool="brush" title="Brush (B)">🖌️</button>
+        <button data-tool="pencil" title="Pixel pencil (P)">✏️</button>
+        <button data-tool="eraser" title="Eraser (E)">🧽</button>
+        <button data-tool="fill" title="Fill bucket (F)">🪣</button>
+        <button data-tool="line" title="Line (L)">📏</button>
+        <button data-tool="rect" title="Rectangle (R)">▭</button>
+        <button data-tool="ellipse" title="Ellipse (O)">◯</button>
+        <button data-tool="spray" title="Spray (S)">💨</button>
+        <button data-tool="picker" title="Color picker (I)">💧</button>
+        <button data-tool="glow" title="Glow brush">✨</button>
+        <button data-tool="rainbow" title="Rainbow brush">🌈</button>
+        <button data-tool="stamp" title="Star stamp">⭐</button>
+      </div>
+    </div>
+    <div class="sect">
+      <h3>Color</h3>
+      <div class="colorrow"><input type="color" id="pColor" value="#ff4d8d"><div id="brushPrev"><i></i></div></div>
+      <div class="swatches" id="swatches"></div>
+    </div>
+    <div class="sect">
+      <h3>Brush</h3>
+      <label>size <span id="pSizeV">8</span> <input type="range" id="pSize" min="1" max="80" value="8"></label>
+      <label>opacity <span id="pOpV">100%</span> <input type="range" id="pOp" min="5" max="100" value="100"></label>
+      <div class="checks">
+        <label class="check"><input type="checkbox" id="pFilled"> Filled shapes</label>
+        <label class="check"><input type="checkbox" id="pMirror"> Mirror ↔</label>
+        <label class="check"><input type="checkbox" id="pGrid"> Pixel grid</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="pmain">
+    <div class="pbar">
+      <input id="pName" title="Costume name (use it in code)">
+      <span class="pinfo" id="pInfo"></span>
+      <span class="sep"></span>
+      <button class="icon" id="pUndo" title="Undo (Ctrl+Z)">↶</button>
+      <button class="icon" id="pRedo" title="Redo (Ctrl+Y)">↷</button>
+      <button class="icon" id="pZoomOut" title="Zoom out">➖</button>
+      <button class="icon" id="pZoomIn" title="Zoom in">➕</button>
+      <span class="sep"></span>
+      <button id="pFlipH" title="Flip left/right">⇋ Flip</button>
+      <button id="pImport" title="Import a picture file">📥 Import</button>
+      <button id="pClear" class="danger">🗑 Clear</button>
+      <div class="spacer"></div>
+      <button id="pUse" class="primary">➕ Add to stage</button>
+    </div>
+    <div class="pcanvasbox" id="pbox">
+      <div class="pstack" id="pstack">
+        <canvas id="pc" width="64" height="64"></canvas>
+        <canvas id="pover" width="64" height="64"></canvas>
+        <div id="pgrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel pside">
+    <div class="ph">Costumes <span><select id="pNewSize" style="width:auto;padding:3px 4px;font-size:12px"><option value="16">16px</option><option value="32">32px</option><option value="64" selected>64px</option><option value="128">128px</option><option value="256">256px</option></select> <button id="pNew" class="icon">＋</button></span></div>
+    <div id="costumeList"></div>
+    <div class="btnrow" style="margin-top:10px">
+      <button id="pDup">⧉ Duplicate</button>
+      <button id="pDel" class="danger">🗑 Delete</button>
+    </div>
+    <p class="hint">Costumes are pictures for your <b>sprites</b>. Switch them in code:<br><code>@hero.costume = "hero2"</code><br>Stick them anywhere: <code>sticker "tree", 50, 80</code></p>
+  </div>
+</section>
+
+<!-- ============ LEARN ============ -->
+<section id="learn" class="view">
+  <div>
+    <div class="video" id="video">
+      <div class="vcode"><div class="vfile">my_game.doodle</div><div id="vcode"></div></div>
+      <div class="vstage"><canvas id="vcanvas" width="400" height="300"></canvas></div>
+      <div class="vtitle" id="vtitle"></div>
+      <div class="vcaption" id="vcaption"></div>
+      <button class="bigplay" id="bigplay" aria-label="Play">▶</button>
+    </div>
+    <div class="vcontrols">
+      <button id="vprev" title="Previous lesson">⏮</button>
+      <button id="vplay" title="Play / pause (space)">▶</button>
+      <button id="vnext" title="Next lesson">⏭</button>
+      <div class="vbar" id="vbar"><div class="vfill" id="vfill"></div></div>
+      <span id="vpos"></span>
+      <select id="vspeed" title="Speed">
+        <option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option>
+      </select>
+      <button id="vvoice">🔊 Voice on</button>
+      <button id="vtry" style="background:var(--accent);border:0">✏️ Try this code</button>
+    </div>
+  </div>
+  <aside class="panel lessons">
+    <div class="ph">Lessons <span class="tag" id="lessonCount"></span></div>
+    <ol id="lessonList"></ol>
+  </aside>
+</section>
+
+
+<div class="modal" id="exportModal" hidden>
+  <div class="mcard">
+    <div id="exChoose">
+      <h2>🚀 Export your game</h2>
+      <p class="muted">Turn your project into a game anyone can play.</p>
+      <label>Game name <input id="exName" maxlength="50"></label>
+      <div class="exapp">
+        <div class="exapp-icon">🎮</div>
+        <div><b>Your game becomes an app</b> <em class="okpill">✓ no warnings</em>
+          <small>You get one <b>.doodle</b> file. Double-click it and your game opens in <b>its own window</b>, with no tabs, no address bar and nothing to unzip. Each Windows computer needs <b>Doodle Player</b>, a quick one-time setup. <a href="#" id="exSetupLink2" onclick="return false">How to set it up</a></small></div>
+      </div>
+      <label class="check" id="exFullRow"><input type="checkbox" id="exFull"> Go full screen when Play is pressed</label>
+      <div class="btnrow" style="justify-content:flex-end;margin-top:14px"><button id="exCancel">Cancel</button><button id="exGo" class="primary">🚀 Make my app</button></div>
+    </div>
+    <div id="exDoneApp" hidden>
+      <h2>🎉 Your game is downloading!</h2>
+      <p class="muted">Look for <b id="exAppName"></b> in your Downloads folder.</p>
+      <ol class="steps">
+        <li><b>First time on this computer?</b> Set up Doodle Player below. You only do this once. <button id="exSetupLink" class="small">🔧 Show me how</button></li>
+        <li><b>Double-click</b> the .doodle file. Your game opens in its own window, like an app. 🎮<small>No unzipping and no warnings. Press <b>F11</b> for full screen.</small></li>
+      </ol>
+      <p class="hint">Sending it to a friend? They set up Doodle Player once too, and then their double-click works the same way.</p>
+      <div class="btnrow" style="justify-content:flex-end;margin-top:14px"><button id="exOk3" class="primary">Got it!</button></div>
+    </div>
+    <div id="exSetupBox" class="setupbox" hidden>
+      <h3>🔧 Set up Doodle Player (once per computer)</h3>
+      <ol class="steps">
+        <li>Click <button id="copySetup" class="primary small">📋 Copy setup</button></li>
+        <li>Press the <b>Windows key</b>, type <b>PowerShell</b>, and press <b>Enter</b>.</li>
+        <li>Press <b>Ctrl+V</b> (or right-click) inside the PowerShell window to paste, then press <b>Enter</b>.<small>If it asks about pasting several lines, click <b>Paste anyway</b>. When it says <b>Doodle Player is ready!</b> you can close it.</small></li>
+      </ol>
+      <p class="hint">It doesn't need an administrator, and it only changes your own Windows account: it teaches Windows that <b>.doodle</b> files are games, so double-clicking one opens it in its own window. Want to see exactly what it does? It's right here:</p>
+      <details><summary>Show the setup code</summary><pre id="setupCode" class="setupcode"></pre></details>
+      <details><summary>Remove Doodle Player</summary><p class="hint">Paste this into PowerShell the same way: <button id="copyRemove" class="small">📋 Copy</button></p><pre id="removeCode" class="setupcode"></pre></details>
+    </div>
+  </div>
+</div>
+
+<div id="toasts"></div>
